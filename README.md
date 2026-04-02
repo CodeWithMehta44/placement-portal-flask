@@ -75,6 +75,7 @@ placement-portal-flask/
 ## 📊 Milestone Tracking
 
 * ✅ Milestone 0: GitHub Repository Setup Completed
+* ✅ Milestone 1: DB-Relationship
 
 ---
 
