@@ -1,21 +1,84 @@
-# placement-portal-flask
-A Placement Portal web application built using Flask, SQLite, and Bootstrap for managing campus recruitment activities.
-# Placement Portal Application
+# Placement Portal Application (MAD-I Project)
 
-A web-based Placement Portal built using Flask, SQLite, and Bootstrap.
+## 👨‍🎓 Student Details
 
-## Features
-- Admin, Company, Student roles
-- Placement drive management
-- Application tracking system
-- Role-based authentication
+* Name: Ashish Mehta
+* Course: Modern Application Development I (MAD-I)
+* Program: IITM BS Data Science
 
-## Tech Stack
-- Flask
-- SQLite
-- HTML, CSS, Bootstrap
+---
 
-## How to Run
-1. Clone repo
-2. Install dependencies
-3. Run app.py
+## 📌 Project Description
+
+The Placement Portal Application is a web-based system designed to manage campus recruitment activities efficiently.
+
+It allows interaction between:
+
+* Admin (Institute Placement Cell)
+* Companies
+* Students
+
+The system replaces manual processes like spreadsheets and emails by providing a centralized platform for placement management.
+
+---
+
+## 🚀 Features
+
+### 👨‍💼 Admin
+
+* Approve/Reject company registrations
+* Approve/Reject placement drives
+* View all students, companies, and applications
+* Search and manage users
+* Blacklist students or companies
+
+### 🏢 Company
+
+* Register and wait for admin approval
+* Create and manage placement drives
+* View student applications
+* Shortlist/select/reject candidates
+
+### 🎓 Student
+
+* Register and login
+* View available placement drives
+* Apply for jobs
+* Track application status
+* View placement history
+
+---
+
+## 🛠️ Tech Stack
+
+* Backend: Flask (Python)
+* Frontend: HTML, CSS, Bootstrap, Jinja2
+* Database: SQLite
+
+---
+
+## 📂 Project Structure
+
+```
+placement-portal-flask/
+│
+├── app.py
+├── models.py
+├── config.py
+├── templates/
+├── static/
+└── README.md
+```
+
+---
+
+## 📊 Milestone Tracking
+
+* ✅ Milestone 0: GitHub Repository Setup Completed
+
+---
+
+## 📌 Note
+
+This project is part of the MAD-I course and is intended for educational purposes.
+
