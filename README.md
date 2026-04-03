@@ -76,7 +76,7 @@ placement-portal-flask/
 
 * ✅ Milestone 0: GitHub Repository Setup Completed
 * ✅ Milestone 1: DB-Relationship
-* ✅ Milestone 1: Authentication and role-based access
+* ✅ Milestone 2: Authentication and role-based access
 
 ---
 
