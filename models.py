@@ -37,6 +37,8 @@ class PlacementDrive(db.Model):
 # ---------------- APPLICATION ----------------
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
+    student_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     drive_id = db.Column(db.Integer, db.ForeignKey('placement_drive.id'))
-    status = db.Column(db.String(20))  # applied / selected / rejected
+    status = db.Column(db.String(50), default='applied')
+    student = db.relationship('User', backref='applications')
+    drive = db.relationship('PlacementDrive', backref='applications')

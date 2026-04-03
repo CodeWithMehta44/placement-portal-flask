@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View_application</title>
+</head>
+<body>
+    <h2>Applications Received</h2>
+    {% for app in applications %}
+        <div>
+            <p>Student Name: {{ app.student.name }}</p>
+            <p>Email: {{ app.student.email }}</p>
+
+            <p>Drive Title: {{ app.drive.title }}</p>
+            <p>Status: {{ app.status }}</p>
+            <hr>
+        </div>
+    {% endfor %}
+
+<a href="/logout">Logout</a>
+</body>
+</html>

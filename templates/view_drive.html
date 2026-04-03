@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Available Drives</h2>
+
+{% for drive in drives %}
+<div>
+    <h3>{{ drive.title }}</h3>
+    <p>{{ drive.description }}</p>
+    <p>Deadline: {{ drive.deadline }}</p>
+
+    {% set applied = false %}
+    {% for app in drive.applications %}
+        {% if app.student_id == session['user_id'] %}
+            {% set applied = true %}
+        {% endif %}
+    {% endfor %}
+
+    {% if applied %}
+        <p>Already Applied ✅</p>
+    {% else %}
+        <a href="/apply/{{ drive.id }}">Apply</a>
+    {% endif %}
+
+    <a href="/logout">Logout</a>
+    <hr>
+</div>
+{% endfor %}
+</body>
+</html>
