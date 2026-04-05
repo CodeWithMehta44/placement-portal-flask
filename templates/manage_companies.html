@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Manage Companies</h2>
+
+{% for company in companies %}
+<div class="card p-3 mb-2">
+    <h4>{{ company.email }}</h4>
+
+    <p>Status:
+        {% if company.is_approved %}
+             Approved
+        {% else %}
+             Pending
+        {% endif %}
+    </p>
+
+    <a href="/approve_company/{{ company.id }}">Approve</a>
+    <a href="/reject_company/{{ company.id }}">Reject</a>
+</div>
+{% endfor %}
+
+{% endblock %}

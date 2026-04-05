@@ -8,14 +8,15 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     role = db.Column(db.String(20))  # admin / student / company
-
+    is_approved = db.Column(db.Boolean, default=False)
+    is_active = db.Column(db.Boolean, default=True)
 # ---------------- COMPANY TABLE ----------------
 class Company(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     hr_contact = db.Column(db.String(100))
     website = db.Column(db.String(200))
-    approved = db.Column(db.Boolean, default=False)
+    is_approved = db.Column(db.Boolean, default=False)
 
 # ---------------- STUDENT TABLE ----------------
 class Student(db.Model):
@@ -32,7 +33,7 @@ class PlacementDrive(db.Model):
     description = db.Column(db.Text)
     deadline = db.Column(db.String(50))
     status = db.Column(db.String(20))  # pending / approved / closed
-
+    is_approved = db.Column(db.Boolean, default=False)
 
 # ---------------- APPLICATION ----------------
 class Application(db.Model):

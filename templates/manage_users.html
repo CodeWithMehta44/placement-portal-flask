@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Manage Users</h2>
+
+<form method="GET">
+    <input type="text" name="q" placeholder="Search by email">
+    <button type="submit">Search</button>
+</form>
+
+{% for user in users %}
+<div class="card p-3 mb-2">
+    <h4>{{ user.email }} ({{ user.role }})</h4>
+
+    <p>Status:
+        {% if user.is_active %}
+             Active
+        {% else %}
+             Blocked
+        {% endif %}
+    </p>
+
+    <a href="/toggle_user/{{ user.id }}">Toggle Active</a>
+</div>
+{% endfor %}
+
+{% endblock %}

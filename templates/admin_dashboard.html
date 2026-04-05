@@ -1,12 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-</head>
-<body>
-    <h2>Admin Dashboard </h2>
+
+    {% extends 'base.html' %}
+
+    {% block content %}
+
+    <h2>Admin Dashboard</h2>
+
+    <div class="card p-3 mb-2">
+        <h4>Total Students: {{ total_students }}</h4>
+    </div>
+
+    <div class="card p-3 mb-2">
+        <h4>Total Companies: {{ total_companies }}</h4>
+    </div>
+
+    <div class="card p-3 mb-2">
+        <h4>Total Drives: {{ total_drives }}</h4>
+    </div>
+
+    <div class="card p-3 mb-2">
+        <h4>Total Applications: {{ total_applications }}</h4>
+    </div>
+    <a href="/manage_companies" class="btn btn-primary">Manage Companies</a>
     <a href="/logout">Logout</a>
-</body>
-</html>
+    {% endblock %}
+        

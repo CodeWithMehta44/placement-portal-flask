@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Manage Drives</h2>
+
+{% for drive in drives %}
+<div class="card p-3 mb-2">
+    <h4>{{ drive.title }}</h4>
+    <p>{{ drive.description }}</p>
+
+    <p>Status:
+        {% if drive.is_approved %}
+             Approved
+        {% else %}
+             Pending
+        {% endif %}
+    </p>
+
+    <a href="/approve_drive/{{ drive.id }}">Approve</a>
+    <a href="/reject_drive/{{ drive.id }}">Reject</a>
+</div>
+{% endfor %}
+
+{% endblock %}

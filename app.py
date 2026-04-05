@@ -27,6 +27,8 @@ def login():
         user = User.query.filter_by(email=email, password=password).first()
 
         if user:
+            if user and not user.is_active:
+                return "Your account is blocked by admin."
             session['user_id'] = user.id
             session['role'] = user.role
             return redirect('/dashboard')
@@ -74,7 +76,7 @@ def dashboard():
         return render_template('company_dashboard.html')
 
     elif role == 'admin':
-        return render_template('admin_dashboard.html')
+        return redirect('/admin_dashboard')
 
     return "Invalid Role"
 
@@ -90,6 +92,9 @@ def logout():
 def add_drive():
     if 'user_id' not in session or session.get('role') != 'company':
         return redirect('/login')
+    company = User.query.get(session['user_id'])
+    if not company.is_approved:
+        return "Your account is not approved by admin yet."
 
     if request.method == 'POST':
         title = request.form['title']
@@ -101,7 +106,8 @@ def add_drive():
             title=title,
             description=description,
             deadline=deadline,
-            status='open'
+            status='pending',
+            is_approved=False
         )
 
         db.session.add(new_drive)
@@ -117,7 +123,7 @@ def view_drives():
     if 'user_id' not in session or session.get('role') != 'student':
         return redirect('/login')
 
-    drives = PlacementDrive.query.all()
+    drives = PlacementDrive.query.filter_by(is_approved=True).all()
     return render_template('view_drive.html', drives=drives)
 
 #If certeria fullfil apply
@@ -152,6 +158,94 @@ def view_applications():
         apps = Application.query.filter_by(drive_id=drive.id).all()
         applications.extend(apps)
     return render_template('view_application.html', applications=applications)
+
+
+@app.route('/admin_dashboard')
+def admin_dashboard():
+    if 'user_id' not in session or session.get('role') != 'admin':
+        return redirect('/login')
+
+    total_students = User.query.filter_by(role='student').count()
+    total_companies = User.query.filter_by(role='company').count()
+    total_drives = PlacementDrive.query.count()
+    total_applications = Application.query.count()
+
+    return render_template(
+        'admin_dashboard.html',
+        total_students=total_students,
+        total_companies=total_companies,
+        total_drives=total_drives,
+        total_applications=total_applications
+    )
+
+@app.route('/manage_companies')
+def manage_companies():
+    if 'user_id' not in session or session.get('role') != 'admin':
+        return redirect('/login')
+
+    companies = User.query.filter_by(role='company').all()
+    return render_template('manage_companies.html', companies=companies)
+
+@app.route('/approve_company/<int:id>')
+def approve_company(id):
+    company = User.query.get(id)
+    company.is_approved = True
+    db.session.commit()
+    return redirect('/manage_companies')
+
+
+@app.route('/reject_company/<int:id>')
+def reject_company(id):
+    company = User.query.get(id)
+    company.is_approved = False
+    db.session.commit()
+    return redirect('/manage_companies')
+
+@app.route('/manage_drives')
+def manage_drives():
+    if 'user_id' not in session or session.get('role') != 'admin':
+        return redirect('/login')
+
+    drives = PlacementDrive.query.all()
+    return render_template('manage_drives.html', drives=drives)
+
+@app.route('/approve_drive/<int:id>')
+def approve_drive(id):
+    drive = PlacementDrive.query.get(id)
+    drive.is_approved = True
+    drive.status = 'open'
+    db.session.commit()
+    return redirect('/manage_drives')
+
+
+@app.route('/reject_drive/<int:id>')
+def reject_drive(id):
+    drive = PlacementDrive.query.get(id)
+    drive.is_approved = False
+    drive.status = 'rejected'
+    db.session.commit()
+    return redirect('/manage_drives')
+
+@app.route('/manage_users')
+def manage_users():
+    if 'user_id' not in session or session.get('role') != 'admin':
+        return redirect('/login')
+
+    query = request.args.get('q')
+
+    if query:
+        users = User.query.filter(User.email.contains(query)).all()
+    else:
+        users = User.query.all()
+
+    return render_template('manage_users.html', users=users)
+
+@app.route('/toggle_user/<int:id>')
+def toggle_user(id):
+    user = User.query.get(id)
+    user.is_active = not user.is_active
+    db.session.commit()
+    return redirect('/manage_users')
 
 if __name__ == "__main__":
     app.run(debug=True)
