@@ -3,6 +3,8 @@ from models import db
 from models import *
 from flask import session
 from flask import render_template, request, redirect
+import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = 'secret123'
@@ -73,7 +75,7 @@ def dashboard():
         return render_template('student_dashboard.html')
 
     elif role == 'company':
-        return render_template('company_dashboard.html')
+        return redirect('/company_dashboard')
 
     elif role == 'admin':
         return redirect('/admin_dashboard')
@@ -137,11 +139,16 @@ def apply(drive_id):
         drive_id=drive_id
     ).first()
     if existing:
-        return "You have already applied"
+        return "You have already applied to this drive."
     new_application = Application(
         student_id=session['user_id'],
-        drive_id=drive_id
+        drive_id=drive_id,
+        status="pending"
     )
+    drive = PlacementDrive.query.get(drive_id)
+    if drive.status == "closed":
+        return "This drive is closed."
+
     db.session.add(new_application)
     db.session.commit()
     return "Applied Successfully"
@@ -157,6 +164,15 @@ def view_applications():
     for drive in drives:
         apps = Application.query.filter_by(drive_id=drive.id).all()
         applications.extend(apps)
+    return render_template('view_application.html', applications=applications)
+
+@app.route('/view_applications/<int:drive_id>')
+def view_applications_by_drive(drive_id):
+    if 'user_id' not in session or session.get('role') != 'company':
+        return redirect('/login')
+
+    applications = Application.query.filter_by(drive_id=drive_id).all()
+
     return render_template('view_application.html', applications=applications)
 
 
@@ -177,6 +193,29 @@ def admin_dashboard():
         total_drives=total_drives,
         total_applications=total_applications
     )
+
+@app.route('/company_dashboard')
+def company_dashboard():
+    if 'user_id' not in session or session.get('role') != 'company':
+        return redirect('/login')
+
+    company_id = session['user_id']
+
+    drives = PlacementDrive.query.filter_by(company_id=company_id).all()
+
+    total_drives = len(drives)
+
+    total_applications = 0
+    for drive in drives:
+        total_applications += Application.query.filter_by(drive_id=drive.id).count()
+
+    return render_template(
+        'company_dashboard.html',
+        drives=drives,
+        total_drives=total_drives,
+        total_applications=total_applications
+    )
+
 
 @app.route('/manage_companies')
 def manage_companies():
@@ -247,5 +286,73 @@ def toggle_user(id):
     db.session.commit()
     return redirect('/manage_users')
 
+@app.route('/update_drive_status/<int:drive_id>/<status>')
+def update_drive_status(drive_id, status):
+    if 'user_id' not in session or session.get('role') != 'company':
+        return redirect('/login')
+
+    drive = PlacementDrive.query.get(drive_id)
+
+    # Security check (important 🔥)
+    if drive.company_id != session['user_id']:
+        return "Unauthorized"
+
+    drive.status = status
+    db.session.commit()
+
+    return redirect('/company_dashboard')
+
+@app.route('/update_application_status/<int:app_id>/<status>')
+def update_application_status(app_id, status):
+    if 'user_id' not in session or session.get('role') != 'company':
+        return redirect('/login')
+
+    application = Application.query.get(app_id)
+
+    # Security check
+    drive = PlacementDrive.query.get(application.drive_id)
+    if drive.company_id != session['user_id']:
+        return "Unauthorized"
+
+    application.status = status
+    db.session.commit()
+
+    return redirect(f'/view_applications/{application.drive_id}')
+
+@app.route('/student_applications')
+def student_applications():
+    if 'user_id' not in session or session.get('role') != 'student':
+        return redirect('/login')
+
+    applications = Application.query.filter_by(student_id=session['user_id']).all()
+
+    return render_template('student_applications.html', applications=applications)
+
+@app.route('/upload_resume', methods=['GET', 'POST'])
+def upload_resume():
+    if 'user_id' not in session or session.get('role') != 'student':
+        return redirect('/login')
+
+    if request.method == 'POST':
+        file = request.files['resume']
+
+        if file:
+            filename = secure_filename(file.filename)
+
+            upload_folder = os.path.join(os.getcwd(), 'static', 'resumes')
+            os.makedirs(upload_folder, exist_ok=True)
+
+            filepath = os.path.join(upload_folder, filename)
+
+            file.save(filepath)
+
+            user = User.query.get(session['user_id'])
+            user.resume = filename
+            db.session.commit()
+
+            return "Resume uploaded successfully"
+
+    return render_template('upload_resume.html')
+    
 if __name__ == "__main__":
     app.run(debug=True)

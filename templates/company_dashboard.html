@@ -1,14 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Company Dashboard</title>
-</head>
-<body>
-     <h2>Company Dashboard </h2>
-     <a href="/add_drive">Add Drive</a><br>
-     <a href="/view_applications">View Applications</a><br>
-    <a href="/logout">Logout</a>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Company Dashboard</h2>
+
+<a href="/add_drive">Add Drive</a><br>
+<a href="/view_applications">View Applications</a><br>
+<a href="/logout">Logout</a>
+
+<div class="card p-3 mb-3">
+    <h4>Total Drives: {{ total_drives }}</h4>
+</div>
+
+<div class="card p-3 mb-3">
+    <h4>Total Applications: {{ total_applications }}</h4>
+</div>
+
+<h3>Your Drives</h3>
+
+{% for drive in drives %}
+<div class="card p-3 mb-2">
+    <h4>{{ drive.title }}</h4>
+    <p>{{ drive.description }}</p>
+    <p>Status: {{ drive.status }}</p>
+
+    <a href="/view_applications/{{ drive.id }}">View Applications</a><br>
+
+    {% if drive.status == 'open' %}
+        <a href="/update_drive_status/{{ drive.id }}/closed">Close Drive</a>
+    {% else %}
+        <a href="/update_drive_status/{{ drive.id }}/open">Reopen Drive</a>
+    {% endif %}
+</div>
+{% endfor %}
+
+
+
+{% endblock %}

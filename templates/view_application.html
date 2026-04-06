@@ -7,15 +7,34 @@
 </head>
 <body>
     <h2>Applications Received</h2>
-    {% for app in applications %}
-        <div>
-            <p>Student Name: {{ app.student.name }}</p>
-            <p>Email: {{ app.student.email }}</p>
 
-            <p>Drive Title: {{ app.drive.title }}</p>
-            <p>Status: {{ app.status }}</p>
-            <hr>
-        </div>
+    {% for app in applications %}
+    <div class="card p-3 mb-3">
+
+        <h4>{{ app.student.name }}</h4>
+        <p>Email: {{ app.student.email }}</p>
+        <p>
+            Status:
+            {% if app.status == 'selected' %}
+                <span style="color: green;">Selected</span>
+            {% elif app.status == 'shortlisted' %}
+                <span style="color: orange;">Shortlisted</span>
+            {% elif app.status == 'rejected' %}
+                <span style="color: red;">Rejected</span>
+            {% else %}
+                <span>Pending</span>
+            {% endif %}
+            </p>
+        <a href="/update_application_status/{{ app.id }}/shortlisted">Shortlist</a> |
+        <a href="/update_application_status/{{ app.id }}/rejected">Reject</a>
+        <a href="/update_application_status/{{ app.id }}/selected">Select</a>
+        <p>
+    <a href="/static/resumes/{{ app.student.resume }}" target="_blank">
+        View Resume
+    </a>
+    </p>
+    
+    </div>
     {% endfor %}
 
 <a href="/logout">Logout</a>

@@ -8,6 +8,7 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     role = db.Column(db.String(20))  # admin / student / company
+    resume = db.Column(db.String(200))
     is_approved = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
 # ---------------- COMPANY TABLE ----------------
