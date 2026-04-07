@@ -72,8 +72,7 @@ def dashboard():
     role = session.get('role')
 
     if role == 'student':
-        return render_template('student_dashboard.html')
-
+        return redirect('/student_dashboard')
     elif role == 'company':
         return redirect('/company_dashboard')
 
@@ -353,6 +352,33 @@ def upload_resume():
             return "Resume uploaded successfully"
 
     return render_template('upload_resume.html')
+
+@app.route('/student_dashboard')
+def student_dashboard():
+    if 'user_id' not in session or session.get('role') != 'student':
+        return redirect('/login')
+    search = request.args.get('search')
+    if search:
+        drives = PlacementDrive.query.filter(
+            PlacementDrive.title.contains(search)
+        ).all()
+    else:
+        drives = PlacementDrive.query.all()
+    return render_template('student_dashboard.html', drives=drives)
     
+@app.route('/update_profile', methods=['GET', 'POST'])
+def update_profile():
+    if 'user_id' not in session or session.get('role') != 'student':
+        return redirect('/login')
+    user = User.query.get(session['user_id'])
+    if request.method == 'POST':
+        user.name = request.form['name']
+        user.email = request.form['email']
+        user.skills = request.form['skills']
+        user.education = request.form['education']
+
+        db.session.commit()
+        return redirect('/dashboard')
+    return render_template('update_profile.html', user=user)
 if __name__ == "__main__":
     app.run(debug=True)

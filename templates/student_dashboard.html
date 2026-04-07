@@ -7,9 +7,26 @@
 </head>
 <body>
      <h2>Student Dashboard </h2>
-     <a href="/view_drives">View Drives</a><br>
-    <a href="/logout">Logout</a>
-    <a href="/student_applications">My Applications</a>
+     <h2>Available Jobs</h2>
+    <form method="GET">
+    <input type="text" name="search" placeholder="Search jobs...">
+    <button type="submit">Search</button>
+    </form>
+    {% for drive in drives %}
+    <div class="card p-3 mb-2">
+        <h4>{{ drive.title }}</h4>
+        <p>{{ drive.description }}</p>
+        <p>Status: {{ drive.status }}</p>
+
+        <a href="/apply/{{ drive.id }}">Apply</a>
+    </div>
+    
+    <br><br>
+{% endfor %}
+    <a href="/update_profile">Update Profile</a><br>
+    <a href="/view_drives">View Drives</a><br>
+    <a href="/logout">Logout</a><br>
+    <a href="/student_applications">My Applications</a><br>
     <a href="/upload_resume">Upload Resume</a>
 </body>
 </html>

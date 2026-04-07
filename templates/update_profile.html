@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update_Profile</title>
+</head>
+<body>
+    <h2>Update Profile</h2>
+
+<form method="POST">
+    <input type="text" name="name" value="{{ user.name }}" placeholder="Name"><br>
+    <input type="email" name="email" value="{{ user.email }}" placeholder="Email"><br>
+
+    <textarea name="skills" placeholder="Skills">{{ user.skills }}</textarea><br>
+    <textarea name="education" placeholder="Education">{{ user.education }}</textarea><br>
+
+    <button type="submit">Update</button>
+</form>
+</body>
+</html>
