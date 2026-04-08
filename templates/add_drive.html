@@ -4,49 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add drive</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="row justify-content-center">
-    <div class="col-md-6">
+    <h2>Add Placement Drive</h2>
 
-        <div class="card shadow-sm border-0">
-            <div class="card-body p-4">
-
-                <h3 class="text-center mb-4">Add Placement Drive</h3>
-
-                <form method="POST">
-
-                    <div class="mb-3">
-                        <label class="form-label">Job Title</label>
-                        <input type="text" name="title" class="form-control" placeholder="Software Engineer" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Description</label>
-                        <textarea name="description" class="form-control" rows="3" placeholder="Job details..." required></textarea>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Deadline</label>
-                        <input type="date" name="deadline" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Required Skills</label>
-                        <input type="text" name="skills" class="form-control" placeholder="Python, ML, SQL">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary w-100">
-                        Add Drive
-                    </button>
-
-                </form>
-
-            </div>
-        </div>
-
-    </div>
-</div>
+<form method="POST">
+    <input type="text" name="title" placeholder="Job Title"><br><br>
+    <textarea name="description" placeholder="Description"></textarea><br><br>
+    <input type="text" name="deadline" placeholder="Deadline"><br><br>
+    <input type="text" name="skills" placeholder="Enter skills (Python, ML, SQL)">
+    <button type="submit">Add Drive</button>
+</form>
 </body>
 </html>

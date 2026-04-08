@@ -79,6 +79,8 @@ placement-portal-flask/
 * ✅ Milestone 2: Authentication and role-based access
 * ✅ Milestone 3:Admin Dashboard and Management
 * ✅ Milestone 4:Company Dashboard and Job Management
+* ✅ Milestone 5: Student Dashboard and Job Application System
+* ✅ Milestone 6: Job Application History and Status Tracking
 
 ---
 
