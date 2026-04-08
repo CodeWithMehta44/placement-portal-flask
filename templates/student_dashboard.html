@@ -7,9 +7,13 @@
 </head>
 <body>
      <h2>Student Dashboard </h2>
+     <h3>Notifications</h3>
+    {% for note in notifications %}
+        <p>{{ note.message }}</p>
+    {% endfor %}
      <h2>Available Jobs</h2>
-    <form method="GET">
-    <input type="text" name="search" placeholder="Search jobs...">
+    <form method="GET" action="/student_dashboard">
+    <input type="text" name="search" placeholder="Search Jobs(skills, Company)">
     <button type="submit">Search</button>
     </form>
     {% for drive in drives %}
@@ -17,7 +21,7 @@
         <h4>{{ drive.title }}</h4>
         <p>{{ drive.description }}</p>
         <p>Status: {{ drive.status }}</p>
-
+        <p>Skills: {{drive.skills }}</p>
         <a href="/apply/{{ drive.id }}">Apply</a>
     </div>
     

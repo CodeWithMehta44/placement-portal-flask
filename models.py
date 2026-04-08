@@ -33,6 +33,7 @@ class PlacementDrive(db.Model):
     title = db.Column(db.String(100))
     description = db.Column(db.Text)
     deadline = db.Column(db.String(50))
+    skills = db.Column(db.String(200))
     status = db.Column(db.String(20))  # pending / approved / closed
     is_approved = db.Column(db.Boolean, default=False)
 
@@ -44,3 +45,8 @@ class Application(db.Model):
     status = db.Column(db.String(50), default='applied')
     student = db.relationship('User', backref='applications')
     drive = db.relationship('PlacementDrive', backref='applications')
+
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
+    message = db.Column(db.String(200))

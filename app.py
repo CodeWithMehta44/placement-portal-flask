@@ -4,6 +4,7 @@ from models import *
 from flask import session
 from flask import render_template, request, redirect
 import os
+from sqlalchemy import or_
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -95,15 +96,17 @@ def add_drive():
         return redirect('/login')
     company = User.query.get(session['user_id'])
     if not company.is_approved:
-        return "Your account is not approved by admin yet."
+        return "Company not approved by admin yet."
 
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
         deadline = request.form['deadline']
+        skills = request.form['skills']
 
         new_drive = PlacementDrive(
             company_id=session['user_id'],
+            skills = skills,
             title=title,
             description=description,
             deadline=deadline,
@@ -197,7 +200,10 @@ def admin_dashboard():
 def company_dashboard():
     if 'user_id' not in session or session.get('role') != 'company':
         return redirect('/login')
-
+    company = User.query.get(session['user_id'])
+    if not company.is_approved:
+        return "Waiting for admin approval"
+    
     company_id = session['user_id']
 
     drives = PlacementDrive.query.filter_by(company_id=company_id).all()
@@ -292,7 +298,7 @@ def update_drive_status(drive_id, status):
 
     drive = PlacementDrive.query.get(drive_id)
 
-    # Security check (important 🔥)
+    # Security check 
     if drive.company_id != session['user_id']:
         return "Unauthorized"
 
@@ -312,10 +318,19 @@ def update_application_status(app_id, status):
     drive = PlacementDrive.query.get(application.drive_id)
     if drive.company_id != session['user_id']:
         return "Unauthorized"
+    allowed_status = ['shortlisted', 'interview', 'selected', 'rejected']
 
+    if status not in allowed_status:
+        return "Invalid status"
+    
     application.status = status
     db.session.commit()
-
+    notification = Notification(
+    user_id=application.student_id,
+    message=f"Your application status is now {status}"
+    )
+    db.session.add(notification)
+    db.session.commit()
     return redirect(f'/view_applications/{application.drive_id}')
 
 @app.route('/student_applications')
@@ -357,14 +372,21 @@ def upload_resume():
 def student_dashboard():
     if 'user_id' not in session or session.get('role') != 'student':
         return redirect('/login')
-    search = request.args.get('search')
+    search = request.args.get('search', '')
+
+    query = PlacementDrive.query.filter_by(status='open')
+    notifications = Notification.query.filter_by(user_id=session['user_id']).all()
     if search:
-        drives = PlacementDrive.query.filter(
-            PlacementDrive.title.contains(search)
-        ).all()
-    else:
-        drives = PlacementDrive.query.all()
-    return render_template('student_dashboard.html', drives=drives)
+        query = query.join(User, PlacementDrive.company_id == User.id).filter(
+            or_(
+                PlacementDrive.title.ilike(f"%{search}%"),
+                PlacementDrive.description.ilike(f"%{search}%"),
+                PlacementDrive.skills.ilike(f"%{search}%"),
+                User.name.ilike(f"%{search}%")   # company name
+            )
+        )
+    drives = query.all()
+    return render_template('student_dashboard.html', drives=drives,notifications=notifications)
     
 @app.route('/update_profile', methods=['GET', 'POST'])
 def update_profile():
@@ -380,5 +402,6 @@ def update_profile():
         db.session.commit()
         return redirect('/dashboard')
     return render_template('update_profile.html', user=user)
+
 if __name__ == "__main__":
     app.run(debug=True)

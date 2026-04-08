@@ -5,18 +5,23 @@
 <h2>My Applications</h2>
 
 {% for app in applications %}
-<div class="card p-3 mb-3">
+<div class="card" style="margin:10px; padding:10px; border:1px solid gray;">
 
     <h4>{{ app.drive.title }}</h4>
     <p>Description: {{ app.drive.description }}</p>
-    <p>Status: 
-    {% if app.status == "applied" %}
-        pending
-    {% else %}
-        {{ app.status }}
-    {% endif %}
-</p>
-<a href="/student_applications">View My Applications</a>
+    <p>Status:
+        {% if app.status == 'selected' %}
+            <span style="color:green;">Selected</span>
+        {% elif app.status == 'shortlisted' %}
+            <span style="color:orange;">Shortlisted</span>
+        {% elif app.status == 'interview' %}
+            <span style="color:blue;">Interview</span>
+        {% elif app.status == 'rejected' %}
+            <span style="color:red;">Rejected</span>
+        {% else %}
+            <span>Applied</span>
+        {% endif %}
+    </p>
 </div>
 {% endfor %}
 

@@ -19,15 +19,18 @@
                 <span style="color: green;">Selected</span>
             {% elif app.status == 'shortlisted' %}
                 <span style="color: orange;">Shortlisted</span>
+            {% elif app.status == 'interview' %}
+            <span style="color: blue;">Interview</span> 
             {% elif app.status == 'rejected' %}
                 <span style="color: red;">Rejected</span>
             {% else %}
                 <span>Pending</span>
             {% endif %}
             </p>
-        <a href="/update_application_status/{{ app.id }}/shortlisted">Shortlist</a> |
-        <a href="/update_application_status/{{ app.id }}/rejected">Reject</a>
-        <a href="/update_application_status/{{ app.id }}/selected">Select</a>
+        <a href="/update_application_status/{{ app.id }}/shortlisted">Shortlist</a><br>|
+        <a href="/update_application_status/{{ app.id }}/interview">Interview</a><br>
+        <a href="/update_application_status/{{ app.id }}/rejected">Reject</a><br>
+        <a href="/update_application_status/{{ app.id }}/selected">Select</a><br>
         <p>
     <a href="/static/resumes/{{ app.student.resume }}" target="_blank">
         View Resume
