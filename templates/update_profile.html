@@ -1,21 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update_Profile</title>
-</head>
-<body>
-    <h2>Update Profile</h2>
+{% extends "base.html" %}
 
-<form method="POST">
-    <input type="text" name="name" value="{{ user.name }}" placeholder="Name"><br>
-    <input type="email" name="email" value="{{ user.email }}" placeholder="Email"><br>
+{% block content %}
 
-    <textarea name="skills" placeholder="Skills">{{ user.skills }}</textarea><br>
-    <textarea name="education" placeholder="Education">{{ user.education }}</textarea><br>
+<h2 class="mb-4">Update Profile</h2>
 
-    <button type="submit">Update</button>
+<form method="POST" class="card p-4 shadow-sm">
+
+    <div class="mb-3">
+        <label>Name</label>
+        <input type="text" name="name" value="{{ user.name }}" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label>Email</label>
+        <input type="email" name="email" value="{{ user.email }}" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label>Skills</label>
+        <input type="text" name="skills" value="{{ user.skills }}" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label>Education</label>
+        <input type="text" name="education" value="{{ user.education }}" class="form-control">
+    </div>
+
+    <button class="btn btn-dark  rounded- 1">Update</button>
+
 </form>
-</body>
-</html>
+
+{% endblock %}

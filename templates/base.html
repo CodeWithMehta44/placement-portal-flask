@@ -11,7 +11,31 @@
 
 <nav class="navbar navbar-dark bg-dark">
     <div class="container-fluid">
-        <span class="navbar-brand mb-0 h1">Placement Portal</span>
+
+        <span class="navbar-brand">Placement Portal</span>
+
+        <div>
+
+            {% if session.get('role') == 'student' %}
+                <a href="/student_dashboard" class="btn btn-outline-light btn-sm">Dashboard</a>
+                <a href="/student_applications" class="btn btn-outline-light btn-sm">Applications</a>
+                <a href="/upload_resume" class="btn btn-outline-light btn-sm">Resume</a>
+                <a href="/profile" class="btn btn-outline-light btn-sm">Profile</a>
+
+            {% elif session.get('role') == 'company' %}
+                <a href="/company_dashboard" class="btn btn-outline-light btn-sm">Dashboard</a>
+                <a href="/add_drive" class="btn btn-outline-light btn-sm">Post Job</a>
+
+            {% elif session.get('role') == 'admin' %}
+                <a href="/admin_dashboard" class="btn btn-outline-light btn-sm">Admin</a>
+                <a href="/manage_companies" class="btn btn-outline-light btn-sm">Companies</a>
+                <a href="/manage_drives" class="btn btn-outline-light btn-sm">Drives</a>
+            {% endif %}
+
+            <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+
+        </div>
+
     </div>
 </nav>
 

@@ -116,7 +116,7 @@ def add_drive():
 
         db.session.add(new_drive)
         db.session.commit()
-        return "Drive Added Successfully"
+        return redirect('/company_dashboard')
     return render_template('add_drive.html')
 
 
@@ -394,14 +394,26 @@ def update_profile():
         return redirect('/login')
     user = User.query.get(session['user_id'])
     if request.method == 'POST':
-        user.name = request.form['name']
-        user.email = request.form['email']
-        user.skills = request.form['skills']
-        user.education = request.form['education']
+        print("POST HIT:", request.form)
+
+        user.name = request.form.get('name')
+        user.email = request.form.get('email')
+        user.skills = request.form.get('skills')
+        user.education = request.form.get('education')
 
         db.session.commit()
-        return redirect('/dashboard')
+        
+
+        return redirect('/profile')
     return render_template('update_profile.html', user=user)
+
+@app.route('/profile')
+def profile():
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    user = User.query.get(session['user_id'])
+    return render_template('profile.html', user=user)
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,27 +1,64 @@
 
-    {% extends 'base.html' %}
+    {% extends "base.html" %}
 
-    {% block content %}
+{% block content %}
 
-    <h2>Admin Dashboard</h2>
+<h2 class="mb-4">Admin Dashboard</h2>
 
-    <div class="card p-3 mb-2">
-        <h4>Total Students: {{ total_students }}</h4>
+<!-- Stats Cards -->
+<div class="row g-4">
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 text-center p-3">
+            <h6 class="text-muted">Students</h6>
+            <h2>{{ total_students }}</h2>
+        </div>
     </div>
 
-    <div class="card p-3 mb-2">
-        <h4>Total Companies: {{ total_companies }}</h4>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 text-center p-3">
+            <h6 class="text-muted">Companies</h6>
+            <h2>{{ total_companies }}</h2>
+        </div>
     </div>
 
-    <div class="card p-3 mb-2">
-        <h4>Total Drives: {{ total_drives }}</h4>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 text-center p-3">
+            <h6 class="text-muted">Drives</h6>
+            <h2>{{ total_drives }}</h2>
+        </div>
     </div>
 
-    <div class="card p-3 mb-2">
-        <h4>Total Applications: {{ total_applications }}</h4>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 text-center p-3">
+            <h6 class="text-muted">Applications</h6>
+            <h2>{{ total_applications }}</h2>
+        </div>
     </div>
-    <a href="/manage_companies" class="btn btn-primary">Manage Companies</a>
-    <a href="/manage_drives" class="btn btn-primary">Manage Drives</a>
-    <a href="/logout">Logout</a>
-    {% endblock %}
-        
+
+</div>
+
+<!-- Actions -->
+<div class="mt-5">
+
+    <h4 class="mb-3">Manage System</h4>
+
+    <div class="d-flex gap-3 flex-wrap">
+
+        <a href="/manage_companies" class="btn btn-primary">
+            Manage Companies
+        </a>
+
+        <a href="/manage_drives" class="btn btn-dark">
+            Manage Drives
+        </a>
+
+        <a href="/manage_users" class="btn btn-secondary">
+            Manage Users
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}
