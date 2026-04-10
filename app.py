@@ -34,15 +34,18 @@ def login():
                 return "Your account is blocked by admin."
             session['user_id'] = user.id
             session['role'] = user.role
+            #session will remember his user_id and role after login
             return redirect('/dashboard')
         else:
             return redirect('/register')
 
     return render_template('login.html')
 
+#Session management is used to keep the user logged in after authentication by storing user data temporarily.
+#session is storing user information after login so the system remembers who is using the website.
 
 
-#Regiter, if u are not register 
+#Regiter, if u are not able to login 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -50,14 +53,14 @@ def register():
         email = request.form['email']
         password = request.form['password']
         role = request.form['role']
-
+#Here method post will request to html form for the data 
         new_user = User(
             name=name,
             email=email,
             password=password,
             role=role
         )
-
+#Here we adding data in our database through session.add(new_user)
         db.session.add(new_user)
         db.session.commit()
 
@@ -65,7 +68,7 @@ def register():
     
     return render_template('register.html')
 
-#Dashboard 
+#Dashboard role based access control(RBAC)
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
@@ -315,6 +318,7 @@ def update_application_status(app_id, status):
     application = Application.query.get(app_id)
 
     # Security check
+    company = Company.query.get(drive.company_id)
     drive = PlacementDrive.query.get(application.drive_id)
     if drive.company_id != session['user_id']:
         return "Unauthorized"
@@ -327,7 +331,7 @@ def update_application_status(app_id, status):
     db.session.commit()
     notification = Notification(
     user_id=application.student_id,
-    message=f"Your application status is now {status}"
+    message=f"Your application status of {company.name} is now {status}"
     )
     db.session.add(notification)
     db.session.commit()
@@ -402,7 +406,7 @@ def update_profile():
         user.education = request.form.get('education')
 
         db.session.commit()
-        
+    #We didn’t use PUT because HTML forms don’t support PUT
 
         return redirect('/profile')
     return render_template('update_profile.html', user=user)
