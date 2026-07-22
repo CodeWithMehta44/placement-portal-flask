@@ -5,7 +5,7 @@ from flask import session
 from flask import render_template, request, redirect
 import os
 from sqlalchemy import or_
-from werkzeug.utils import secure_filename
+from werkzeug.utils import secure_filename #It provides tools for handling requests, responses, file uploads, etc.
 
 app = Flask(__name__)
 app.secret_key = 'secret123'
@@ -21,7 +21,7 @@ with app.app_context(): #needed to access DB in flask
 
     
 #Check and Login 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'],)
 def login():
     if request.method == 'POST':
         email = request.form['email']
@@ -122,7 +122,7 @@ def add_drive():
         return redirect('/company_dashboard')
     return render_template('add_drive.html')
 
-
+#Create a Python object ---> Add the Python object to the session ---> commit the session
 
 #Student View 
 @app.route('/view_drives')
@@ -318,7 +318,6 @@ def update_application_status(app_id, status):
     application = Application.query.get(app_id)
 
     # Security check
-    company = Company.query.get(drive.company_id)
     drive = PlacementDrive.query.get(application.drive_id)
     if drive.company_id != session['user_id']:
         return "Unauthorized"
@@ -331,7 +330,7 @@ def update_application_status(app_id, status):
     db.session.commit()
     notification = Notification(
     user_id=application.student_id,
-    message=f"Your application status of {company.name} is now {status}"
+    message=f"Your application status is now {status}"
     )
     db.session.add(notification)
     db.session.commit()
@@ -356,7 +355,7 @@ def upload_resume():
 
         if file:
             filename = secure_filename(file.filename)
-
+        #secure_filername = It cleans and makes a filename safe before saving it on our server.
             upload_folder = os.path.join(os.getcwd(), 'static', 'resumes')
             os.makedirs(upload_folder, exist_ok=True)
 
@@ -404,7 +403,7 @@ def update_profile():
         user.email = request.form.get('email')
         user.skills = request.form.get('skills')
         user.education = request.form.get('education')
-
+        user.phone = request.form.get('phone')
         db.session.commit()
     #We didn’t use PUT because HTML forms don’t support PUT
 
@@ -421,3 +420,5 @@ def profile():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+    # hiiii
